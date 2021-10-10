@@ -1,0 +1,6 @@
+.idea/
+.git/
+.venv/
+**/__pycache__
+kubernetes/
+terraform/

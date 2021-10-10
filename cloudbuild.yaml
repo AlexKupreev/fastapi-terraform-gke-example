@@ -1,0 +1,51 @@
+substitutions:
+  _CUSTOM_REGION: us-east1
+  _CUSTOM_CLUSTER: gke-cluster
+
+steps:
+  # Run linter and tests
+  - name: python:3.8-buster
+    entrypoint: make
+    args: [ "all" ]
+
+  # Build app image
+  - name: gcr.io/cloud_builders/docker
+    args:
+      - build
+      - -f
+      - docker/backend.dockerfile
+      - -t
+      - gcr.io/$PROJECT_ID/fastapi-terraform-gke-example:$COMMIT_SHA
+      - .
+
+  # Push app image to Google Cloud Registry
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - gcr.io/$PROJECT_ID/fastapi-terraform-gke-example:$COMMIT_SHA
+
+  # Configure a kubectl workspace for this project
+  - name: gcr.io/cloud-builders/kubectl
+    args:
+      - cluster-info
+    env:
+      - CLOUDSDK_COMPUTE_REGION=$_CUSTOM_REGION
+      - CLOUDSDK_CONTAINER_CLUSTER=$_CUSTOM_CLUSTER
+      - KUBECONFIG=/workspace/.kube/config
+
+  # Deploy with Helm
+  - name: gcr.io/$PROJECT_ID/helm
+    args:
+      - upgrade
+      - -i
+      - fastapi-terraform-gke-example
+      - ./kubernetes
+      - --set
+      - image.repository=gcr.io/$PROJECT_ID/fastapi-terraform-gke-example,image.tag=$COMMIT_SHA
+      - -f
+      - ./kubernetes/values.yaml
+    env:
+      - KUBECONFIG=/workspace/.kube/config
+      - TILLERLESS=false
+      - TILLER_NAMESPACE=kube-system
+timeout: 1200s

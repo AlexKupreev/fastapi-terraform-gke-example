@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Chart.Name }}
+data:
+  PORT: "{{ .Values.app_port }}"
+  DOMAIN: {{ .Values.domain }}
+  SERVER_NAME: {{ .Values.server_name }}
+  SERVER_HOST: {{ .Values.server_host }}
+  BACKEND_CORS_ORIGINS: {{ .Values.backend_cors_origins }}
+  PROJECT_NAME: {{ .Values.project_name }}
+  EMAILS_FROM_EMAIL: {{ .Values.emails_from_email }}
+  USERS_OPEN_REGISTRATION: "{{ .Values.users_open_registration }}"
+  SENTRY_DSN: {{ .Values.sentry_dsn }}
+  FLOWER_BASIC_AUTH: {{ .Values.flower_basic_auth }}
+  POSTGRES_SERVER: {{ .Values.postgres_server }}
+  POSTGRES_DB: {{ .Values.postgres_db }}
+  CONSOLE_LOGGING: "{{ .Values.console_logging }}"
+  CLOUD_LOGGING: "{{ .Values.cloud_logging }}"
+  PUBSUB_PROJECT_ID: {{ .Values.project_id }}
+  TOPIC_ID: {{ .Values.topic_id }}
+  SUBSCRIPTION_ID: {{ .Values.subscription_id }}

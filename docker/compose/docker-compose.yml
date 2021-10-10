@@ -1,0 +1,42 @@
+version: "3.3"
+services:
+
+  db:
+    image: postgres:12
+    ports:
+      - 5432:5432
+    volumes:
+      - app-db-data:/var/lib/postgresql/data/pgdata
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    container_name: fastapi-terraform-gke-example-db
+
+  backend:
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      - SERVER_NAME=localhost
+      - SERVER_HOST=http://localhost
+      - PUBSUB_EMULATOR_HOST=fastapi-terraform-gke-example-pubsub:8085
+      - PUBSUB_PROJECT_ID=local-dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./../../:/app
+    build:
+      context: ./../../
+      dockerfile: docker/backend.dockerfile
+    container_name: fastapi-terraform-gke-example
+
+  pubsub:
+    image: adhawk/google-pubsub-emulator
+    ports:
+      - 8085:8085
+    container_name: fastapi-terraform-gke-example-pubsub
+
+volumes:
+  app-db-data:

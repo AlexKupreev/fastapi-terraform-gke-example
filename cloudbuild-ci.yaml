@@ -1,0 +1,10 @@
+# Run CI check (on pull requests)
+
+steps:
+
+  # Run linter and tests
+  - name: python:3.8-buster
+    entrypoint: make
+    args: [ "all" ]
+
+timeout: 1200s

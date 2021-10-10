@@ -1,0 +1,33 @@
+---
+replicaCount: 1
+
+image:
+  repository: gcr.io/project-name-314159/fastapi-terraform-gke-example
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 80
+
+kubernetes_sa_name: "double-song-gke-sa"
+cloudsql_instance: "project-name-314159:us-east1:fastapi-terraform-gke-example"
+
+app_port: "8080"
+environment: "production"
+server_name: "roundboost.xyz"
+server_host: "https://roundboost.xyz"
+domain: "roundboost.xyz"
+backend_cors_origins: "http://kappa.kupreyeu.name,https://kappa.kupreyeu.name"
+project_name: "Base Project"
+emails_from_email: "info@roundboost.xyz"
+users_open_registration: "False"
+sentry_dsn: "https://public@sentry.example.com/1"
+flower_basic_auth: "admin:changethis"
+postgres_server: "127.0.0.1"
+postgres_db: "database"
+console_logging: "False"
+cloud_logging: "True"
+project_id: "project-name-314159"
+topic_id: "schedule-topic"
+subscription_id: "schedule_sub"
